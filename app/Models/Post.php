@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $connection = 'mysql';
+    // protected $connection = 'mysql';
     protected $table = 'posts';
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
     public $timestamps = true;
+
     protected $fillable = [
         'user_id',
         'category_id',
@@ -23,4 +24,6 @@ class Post extends Model
         'status',
         'views',
     ];
+
+    // protected $guarded = [];
 }

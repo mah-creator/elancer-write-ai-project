@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
 
-    {{ $style }}
+    {{ $style ?? '' }}
 
     <script id="tailwind-config">
         tailwind.config = {
@@ -138,76 +138,29 @@
 <body class="{{ $bodyWrapper }} ">
 
     <!-- TopNavBar -->
-    <nav class="fixed top-0 w-full z-50 bg-surface/50 backdrop-blur-xl border-b border-white/10 shadow-sm">
-        <div class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto">
-            <!-- Brand -->
-            <a href="{{ route('posts.index') }}">
-                <div class="flex items-center gap-3">
-                    <img alt="Aether Logo" class="h-8 w-8" src="/images/logo.svg" />
-                    <span class="font-headline-lg text-headline-lg font-bold tracking-tighter text-on-surface">Aether</span>
-                </div>
-            </a>
-            <!-- Navigation Links -->
-            <div class="hidden md:flex items-center gap-gutter">
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                    href="#">Discover</a>
-                <a class="text-secondary font-bold border-b-2 border-secondary pb-1 font-label-sm text-label-sm"
-                    href="#">Feed</a>
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                    href="#">Creators</a>
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                    href="#">Analytics</a>
-            </div>
-            <!-- Actions -->
-            <div class="flex items-center gap-6">
-                <button
-                    class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all active:scale-95 duration-200">
-                    Create
-                </button>
-                <div class="flex items-center gap-4 text-on-surface-variant">
-                    <button
-                        class="material-symbols-outlined hover:text-on-surface transition-colors">notifications</button>
-                    <button
-                        class="material-symbols-outlined hover:text-on-surface transition-colors">account_circle</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @if (isset($navbar))
+
+    {{ $navbar }}
+    @else
+
+    <x-layouts.default-navbar />
+
+    @endif
+
     <main class="{{ $mainWrapper }}">
         {{ $slot }}
     </main>
 
     <!-- Footer -->
-    <footer class="w-full py-12 bg-surface-dim border-t border-white/5">
-        <div
-            class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-gutter">
-            <div class="flex flex-col items-center md:items-start gap-4">
-                <div class="flex items-center gap-2">
-                    <img alt="Aether Logo" class="h-8 w-8" src="/images/logo.svg" />
-                    <span class="font-headline-lg text-headline-lg font-bold text-on-surface">Aether</span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-center md:text-left">
-                    © 2024 Aether. Cinematic Minimalism for the Creative Mind.
-                </p>
-            </div>
-            <div class="flex items-center gap-gutter">
-                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm"
-                    href="#">Privacy</a>
-                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm"
-                    href="#">Terms</a>
-                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm"
-                    href="#">API</a>
-                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm"
-                    href="#">Careers</a>
-            </div>
-            <div class="flex items-center gap-6 text-on-surface-variant">
-                <a class="hover:text-primary transition-colors" href="#"><span
-                        class="material-symbols-outlined">alternate_email</span></a>
-                <a class="hover:text-primary transition-colors" href="#"><span
-                        class="material-symbols-outlined">share</span></a>
-            </div>
-        </div>
-    </footer>
+    @if (isset($footer))
+
+    {{ $footer }}
+
+    @else
+
+    <x-layouts.default-footer />
+
+    @endif
 
 </body>
 
