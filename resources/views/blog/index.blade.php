@@ -40,8 +40,7 @@
 
     <!-- Hero Section -->
     <section class="cinematic-gradient relative min-h-[600px] flex items-center px-margin-desktop overflow-hidden">
-        <div
-            class="max-w-container-max mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center z-10">
+        <div class="max-w-container-max mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center z-10">
             <div class="md:col-span-6 space-y-6">
                 <div
                     class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary">
@@ -72,8 +71,7 @@
                     <img class="w-full h-full object-cover rounded-xl"
                         alt="A high-end cinematic 3D render of abstract fluid waves in shades of electric blue and deep obsidian. The lighting is moody and atmospheric, with soft glowing edges that suggest a futuristic, technical aesthetic. The composition is minimalist, focusing on the intricate textures and the interplay between light and shadow in a dark void. The style is premium and clean."
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNMNO4DcmbIp2R_T7emO-Pk0TGOZRXmrmd2ie0oo93ggbv5ppgho6kEXNpK0Ic_PQn52VfsDsKOKV0f_tDUnK4XgNVgV07xWWsA6QHEEFHTsX7Jci8F-c5cOuXSzOU7NP8W-5wAhpPYtiZJ4NkB7wjO-vC4RL8DSr11tSg98w4J1-NQRX4RBSTFc7zTPGmMW7VbTeWLzwAU_kejvy1ietOB-UmZsWrWM3jiOY6qlmWqQbbw5uwqMJAUF6XFQAQTLUTtEeBC0-zEXE" />
-                    <div
-                        class="absolute inset-0 bg-linear-to-t from-surface-dim/80 to-transparent pointer-events-none">
+                    <div class="absolute inset-0 bg-linear-to-t from-surface-dim/80 to-transparent pointer-events-none">
                     </div>
                 </div>
                 <!-- Decorative element -->
@@ -102,42 +100,44 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
             @foreach ($posts as $post)
-            <a href="{{ route('posts.show', [$post['id'], $post['slug']]) }}">
-                <article class="glass-card rounded-xl overflow-hidden transition-all flex flex-col">
-                    <div class="relative aspect-video">
-                        <img class="w-full h-full object-cover"
-                            alt="A minimalist digital macro shot of high-tech circuitry emitting a soft cyan neon glow against a dark matte background. The aesthetic is clean and industrial, using a palette of deep slate and vibrant electric blue. The depth of field is shallow, creating a professional bokeh effect that highlights the technical precision of the components. The mood is sophisticated and futuristic."
-                            src="{{ $post['image'] }}" />
-                        <div class="absolute top-4 left-4">
-                            <span
-                                class="bg-surface-dim/80 backdrop-blur-md text-secondary px-3 py-1 rounded-full font-label-sm text-label-sm border border-white/10">{{ $post['categories'][0] }}</span>
-                        </div>
-                    </div>
-                    <div class="p-6 flex flex-col grow">
-                        <div class="flex items-center gap-2 mb-3 text-on-surface-variant">
-                            <span class="font-label-sm text-label-sm">{{ Illuminate\Support\Carbon::createFromTimeString($post['publish_date'])->format('M d, Y') }}</span>
-                            <span class="w-1 h-1 rounded-full bg-white/20"></span>
-                            <span class="font-label-sm text-label-sm">{{ $post['read_time'] }} min read</span>
-                        </div>
-                        <h3 class="font-headline-lg text-headline-lg text-[24px] leading-tight text-on-surface mb-4">
-                            {{ $post['title'] }}
-                        </h3>
-                        <p class="text-on-surface-variant font-body-md line-clamp-3 mb-6">
-                            {{ $post['excerpt'] }}
-                        </p>
-                        <div class="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[12px] font-bold text-on-primary-container">
-                                    EH</div>
-                                <span class="font-label-sm text-label-sm text-on-surface">Elias Thorne</span>
+                <a href="{{ route('posts.show', [$post['id'], $post['slug']]) }}">
+                    <article class="glass-card rounded-xl overflow-hidden transition-all flex flex-col">
+                        <div class="relative aspect-video">
+                            <img class="w-full h-full object-cover"
+                                alt="A minimalist digital macro shot of high-tech circuitry emitting a soft cyan neon glow against a dark matte background. The aesthetic is clean and industrial, using a palette of deep slate and vibrant electric blue. The depth of field is shallow, creating a professional bokeh effect that highlights the technical precision of the components. The mood is sophisticated and futuristic."
+                                src="{{ $post->thumbnailUrl }}" />
+                            <div class="absolute top-4 left-4">
+                                {{ dd($post) }}
+                                <span
+                                    class="bg-surface-dim/80 backdrop-blur-md text-secondary px-3 py-1 rounded-full font-label-sm text-label-sm border border-white/10">{{ $post['categories'][0] ?? '' }}</span>
                             </div>
-                            <button
-                                class="material-symbols-outlined text-on-surface-variant hover:text-secondary transition-colors">bookmark</button>
                         </div>
-                    </div>
-                </article>
-            </a>
+                        <div class="p-6 flex flex-col grow">
+                            <div class="flex items-center gap-2 mb-3 text-on-surface-variant">
+                                <span
+                                    class="font-label-sm text-label-sm">{{ Illuminate\Support\Carbon::createFromTimeString($post['publish_date'])->format('M d, Y') }}</span>
+                                <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                                <span class="font-label-sm text-label-sm">{{ $post['read_time'] }} min read</span>
+                            </div>
+                            <h3 class="font-headline-lg text-headline-lg text-[24px] leading-tight text-on-surface mb-4">
+                                {{ $post['title'] }}
+                            </h3>
+                            <p class="text-on-surface-variant font-body-md line-clamp-3 mb-6">
+                                {{ $post['excerpt'] }}
+                            </p>
+                            <div class="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[12px] font-bold text-on-primary-container">
+                                        EH</div>
+                                    <span class="font-label-sm text-label-sm text-on-surface">Elias Thorne</span>
+                                </div>
+                                <button
+                                    class="material-symbols-outlined text-on-surface-variant hover:text-secondary transition-colors">bookmark</button>
+                            </div>
+                        </div>
+                    </article>
+                </a>
             @endforeach
         </div>
     </section>

@@ -2,29 +2,48 @@
     <div class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto">
         <!-- Brand -->
         <x-brand />
-        <!-- Navigation Links -->
-        <div class="hidden md:flex items-center gap-gutter">
-            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                href="#">Discover</a>
-            <a class="text-secondary font-bold border-b-2 border-secondary pb-1 font-label-sm text-label-sm"
-                href="#">Feed</a>
-            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                href="#">Creators</a>
-            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
-                href="#">Analytics</a>
-        </div>
-        <!-- Actions -->
-        <div class="flex items-center gap-6">
-            <a href="{{ route('dashboard.posts.create') }}"
-                class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all active:scale-95 duration-200">
-                Create
-            </a>
-            <div class="flex items-center gap-4 text-on-surface-variant">
-                <button
-                    class="material-symbols-outlined hover:text-on-surface transition-colors">notifications</button>
-                <button
-                    class="material-symbols-outlined hover:text-on-surface transition-colors">account_circle</button>
+        @auth
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center gap-gutter">
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
+                    href="{{ route('dashboard.posts.index') }}">Dashboard</a>
+                <a class="text-secondary font-bold border-b-2 border-secondary pb-1 font-label-sm text-label-sm"
+                    href="#">Feed</a>
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
+                    href="#">Creators</a>
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm"
+                    href="#">Analytics</a>
             </div>
-        </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-6">
+                <a href="{{ route('dashboard.posts.create') }}"
+                    class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all active:scale-95 duration-200">
+                    Create
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit"
+                        class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm">Logout</button>
+                </form>
+                <x-contents.notification-panel />
+                <!-- <div class="flex items-center gap-4 text-on-surface-variant">
+                    <button
+                        class="material-symbols-outlined hover:text-on-surface transition-colors">notifications</button>
+                    <button
+                        class="material-symbols-outlined hover:text-on-surface transition-colors">account_circle</button>
+                </div> -->
+            </div>
+        @else
+            <div class="flex items-center gap-4">
+                <a href="{{ route('login') }}"
+                    class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all active:scale-95 duration-200">
+                    Login
+                </a>
+                <a href="{{ route('register') }}"
+                    class="bg-secondary text-on-secondary px-6 py-2.5 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all active:scale-95 duration-200">
+                    Sign Up
+                </a>
+            </div>
+        @endauth
     </div>
 </nav>

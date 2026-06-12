@@ -1,4 +1,4 @@
-<footer class="w-full py-12 bg-surface-dim border-t border-white/5">
+<footer class="mt-auto w-full py-12 bg-surface-dim border-t border-white/5">
     <div
         class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-gutter">
         <div class="flex flex-col items-center md:items-start gap-4">

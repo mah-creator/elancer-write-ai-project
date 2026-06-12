@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -20,17 +21,16 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(int $id, string $slug = '')
+    public function show(string $slug)
     {
-        $post = collect($this->posts)->firstWhere('id', $id);
+        $post = Post::
+            withCount('comments as comment_count')
+            ->slug($slug)
+            ->firstOrFail();
 
-        if (!$post) {
-            abort(404);
-        }
+        event('post.viewed', $post);
+        return view('blog.single-post', ['post' => $post]);
 
-        return view('blog.single-post', [
-            'post' => $post
-        ]);
     }
 
     public function create()

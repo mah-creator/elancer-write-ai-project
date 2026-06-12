@@ -10,9 +10,22 @@ class HomeController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, $slug = null)
     {
-        $posts = Post::all();
-        return view('home', compact('posts'));
+        $tab = $request->query('tab', null);
+
+        $posts = Post::with('user')->published();
+
+        if ($slug) {
+            $posts = $posts->whereHas('tags', fn($query) => $query->where('slug', '=', $slug));
+        }
+
+        if ($tab) {
+            match ($tab) {
+                'popular' => $posts = $posts->orderBy('views'),
+                'recent' => $posts = $posts->latest()
+            };
+        }
+        return view('home', ['posts' => $posts->get(), 'featuredPost' => Post::first()]);
     }
 }

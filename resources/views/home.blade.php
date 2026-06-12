@@ -15,7 +15,6 @@
 
             .glass-card:hover {
                 border-color: rgba(255, 255, 255, 0.2);
-                transform: translateY(-4px);
             }
 
             .cinematic-gradient {
@@ -35,144 +34,119 @@
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             }
+
+            .sidebar-link-active {
+                color: #4cd7f6;
+                background: rgba(76, 215, 246, 0.1);
+                border-radius: 0.5rem;
+            }
         </style>
     </x-slot:style>
 
-    <!-- Hero Section -->
-    <section class="cinematic-gradient relative min-h-[600px] flex items-center px-margin-desktop overflow-hidden">
-        <div
-            class="max-w-container-max mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center z-10">
-            <div class="md:col-span-6 space-y-6">
+    <!-- Hero Section (Preserved) -->
+    <section
+        class="cinematic-gradient relative min-h-[500px] flex items-center px-margin-desktop overflow-hidden border-b border-white/5">
+        <x-contents.featured-story :featured-post="$featuredPost" />
+    </section>
+    <!-- Main Feed Layout -->
+    <div class="max-w-container-max mx-auto px-margin-desktop py-12">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-start">
+            <!-- Left Sidebar: Discover & Tags -->
+            <aside class="hidden md:block md:col-span-2 space-y-10 sticky top-32">
+                <div class="space-y-4">
+                    <h3
+                        class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 font-bold px-2">
+                        Discover</h3>
+                    <nav class="space-y-1">
+                        <a class="flex items-center gap-3 px-3 py-2 font-label-sm text-label-sm font-bold {{ request('tab') == null ? 'sidebar-link-active' : 'text-on-surface-variant hover:text-on-surface transition-colors' }}"
+                            href="{{ route('home') }}">
+                            <span class="material-symbols-outlined text-[20px]"
+                                style="font-variation-settings: 'FILL' 1;">explore</span> Explore
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 font-label-sm text-label-sm font-bold {{ request('tab') == 'popular' ? 'sidebar-link-active' : 'text-on-surface-variant hover:text-on-surface transition-colors' }}"
+                            href="{{ route('home', ['tab' => 'popular']) }}">
+                            <span class="material-symbols-outlined text-[20px]">trending_up</span> Popular
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 font-label-sm text-label-sm font-bold {{ request('tab') == 'recent' ? 'sidebar-link-active' : 'text-on-surface-variant hover:text-on-surface transition-colors' }}"
+                            href="{{ route('home', ['tab' => 'recent']) }}">
+                            <span class="material-symbols-outlined text-[20px]">history</span> Recent
+                        </a>
+                    </nav>
+                </div>
+                <div class="space-y-4">
+                    <h3
+                        class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 font-bold px-2">
+                        Your Tags</h3>
+                    <div class="flex flex-wrap gap-2 px-2">
+                        @foreach (App\Models\Tag::all() as $tag)
+                            <a class="px-2.5 py-1 rounded-md font-label-sm text-[11px] bg-surface-variant/30 border border-white/5 text-on-surface-variant transition-all
+                                                         {{ request('slug') == $tag->slug ? 'border-secondary/30 text-secondary' : 'hover:border-secondary/30 hover:text-secondary' }}"
+                                href="{{ route('home', ['slug' => $tag->slug]) }}">#{{ $tag->name }}</a>
+
+                        @endforeach
+                    </div>
+                </div>
+            </aside>
+            <!-- Center Feed Content -->
+            <section class="col-span-1 md:col-span-7 space-y-12">
+                <div class="flex justify-between items-center px-2">
+                    <h2 class="font-headline-lg text-[28px] text-on-surface">For You</h2>
+                    <div class="flex gap-2">
+                        <button
+                            class="px-3 py-1 bg-surface-variant/20 rounded-full text-secondary font-label-sm text-[12px] border border-secondary/20">All</button>
+                        <button
+                            class="px-3 py-1 hover:bg-surface-variant/20 rounded-full text-on-surface-variant font-label-sm text-[12px] transition-colors">Trending</button>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <!-- Feed Card 1 -->
+                    @foreach ($posts as $post)
+                        <x-contents.post-card :post="$post" />
+
+                    @endforeach
+                </div>
+                <div class="pt-8 flex justify-center">
+                    <button
+                        class="px-10 py-3 border border-secondary/30 text-secondary rounded-full font-label-sm text-label-sm hover:bg-secondary/10 transition-all font-bold">
+                        Load More Stories
+                    </button>
+                </div>
+            </section>
+            <!-- Right Sidebar: Trending & Recommendations -->
+            <aside class="hidden lg:block lg:col-span-3 space-y-10 sticky top-32">
+                <!-- Trending Module -->
+                <x-widgets.trending />
+                <!-- Recommended Authors -->
+                <div class="space-y-6">
+                    <h3
+                        class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 font-bold px-2">
+                        Recommended</h3>
+                    <x-widgets.recommended-authors />
+                    <a class="inline-block px-2 font-label-sm text-label-sm text-secondary hover:underline font-bold transition-all"
+                        href="#">View all creators</a>
+                </div>
+                <!-- Prominent Newsletter CTA (Replacement for The Creative Pulse positioning) -->
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary">
-                    <span class="material-symbols-outlined text-[14px]"
-                        style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-                    <span class="font-label-sm text-label-sm uppercase tracking-widest">Featured Story</span>
-                </div>
-                <h1 class="font-display-lg text-display-lg text-on-surface max-w-xl">
-                    The Future of <span class="text-secondary">Generative</span> Motion.
-                </h1>
-                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
-                    Explore how neural architectures are redefining the boundaries of cinematic storytelling and
-                    interactive visual experiences.
-                </p>
-                <div class="flex items-center gap-6 pt-4">
-                    <button
-                        class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-sm text-label-sm font-bold rim-light hover:accent-glow transition-all">
-                        Read Article
-                    </button>
-                    <button
-                        class="text-on-surface border border-white/20 px-8 py-3 rounded-full font-label-sm text-label-sm font-bold hover:bg-white/5 transition-all">
-                        Save to Feed
-                    </button>
-                </div>
-            </div>
-            <div class="md:col-span-6 flex justify-center relative">
-                <div class="relative w-full aspect-square max-w-md rounded-2xl overflow-hidden glass-card p-2">
-                    <img class="w-full h-full object-cover rounded-xl"
-                        alt="A high-end cinematic 3D render of abstract fluid waves in shades of electric blue and deep obsidian. The lighting is moody and atmospheric, with soft glowing edges that suggest a futuristic, technical aesthetic. The composition is minimalist, focusing on the intricate textures and the interplay between light and shadow in a dark void. The style is premium and clean."
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNMNO4DcmbIp2R_T7emO-Pk0TGOZRXmrmd2ie0oo93ggbv5ppgho6kEXNpK0Ic_PQn52VfsDsKOKV0f_tDUnK4XgNVgV07xWWsA6QHEEFHTsX7Jci8F-c5cOuXSzOU7NP8W-5wAhpPYtiZJ4NkB7wjO-vC4RL8DSr11tSg98w4J1-NQRX4RBSTFc7zTPGmMW7VbTeWLzwAU_kejvy1ietOB-UmZsWrWM3jiOY6qlmWqQbbw5uwqMJAUF6XFQAQTLUTtEeBC0-zEXE" />
+                    class="glass-card rounded-2xl p-8 border-secondary/20 bg-secondary/5 relative overflow-hidden group">
                     <div
-                        class="absolute inset-0 bg-linear-to-t from-surface-dim/80 to-transparent pointer-events-none">
+                        class="absolute -top-12 -right-12 w-32 h-32 bg-secondary/10 blur-3xl group-hover:scale-150 transition-transform">
                     </div>
-                </div>
-                <!-- Decorative element -->
-                <div class="absolute -top-12 -right-12 w-64 h-64 bg-secondary/10 blur-[100px] rounded-full"></div>
-            </div>
-        </div>
-    </section>
-    <!-- Discovery Grid -->
-    <section class="py-24 px-margin-desktop max-w-container-max mx-auto">
-        <div class="flex justify-between items-end mb-12">
-            <div>
-                <h2 class="font-headline-lg text-headline-lg text-on-surface">Weekly Discoveries</h2>
-                <p class="text-on-surface-variant font-body-md mt-2">Curated insights from the leading edge of
-                    technology and design.</p>
-            </div>
-            <div class="flex gap-4">
-                <button
-                    class="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 hover:bg-white/5 transition-all">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </button>
-                <button
-                    class="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 hover:bg-white/5 transition-all">
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            @foreach ($posts as $post)
-            <a href="{{ route('posts.show', [$post['id'], $post['slug']]) }}">
-                <article class="glass-card rounded-xl overflow-hidden transition-all flex flex-col">
-                    <div class="relative aspect-video">
-                        <img class="w-full h-full object-cover"
-                            alt=""
-                            src="{{ $post['cover_image'] }}" />
-                        <div class="absolute top-4 left-4">
-                            <span
-                                class="bg-surface-dim/80 backdrop-blur-md text-secondary px-3 py-1 rounded-full font-label-sm text-label-sm border border-white/10">{{ ($post['category'] ?? null) }}</span>
-                        </div>
-                    </div>
-                    <div class="p-6 flex flex-col grow">
-                        <div class="flex items-center gap-2 mb-3 text-on-surface-variant">
-                            <span class="font-label-sm text-label-sm">{{ Illuminate\Support\Carbon::createFromTimeString($post['created_at'])->format('M d, Y') }}</span>
-                            <span class="w-1 h-1 rounded-full bg-white/20"></span>
-                            <span class="font-label-sm text-label-sm">{{ $post['read_time'] }} min read</span>
-                        </div>
-                        <h3 class="font-headline-lg text-headline-lg text-[24px] leading-tight text-on-surface mb-4">
-                            {{ $post['title'] }}
-                        </h3>
-                        <p class="text-on-surface-variant font-body-md line-clamp-3 mb-6">
-                            {{ $post['excerpt'] }}
-                        </p>
-                        <div class="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[12px] font-bold text-on-primary-container">
-                                    EH</div>
-                                <span class="font-label-sm text-label-sm text-on-surface">Elias Thorne</span>
-                            </div>
-                            <button
-                                class="material-symbols-outlined text-on-surface-variant hover:text-secondary transition-colors">bookmark</button>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            @endforeach
-        </div>
-    </section>
-    <!-- Newsletter / Bento Section -->
-    <section class="py-24 px-margin-desktop max-w-container-max mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-
-            <x-widgets.news-letter>
-                <x-slot:helper>
-                    <p class="text-on-surface-variant font-body-sm text-body-sm mt-4">
-                        We respect your privacy. Unsubscribe at any time.
+                    <h3 class="font-headline-lg text-[22px] text-on-surface mb-3">The Creative Pulse</h3>
+                    <p class="text-on-surface-variant/80 font-label-sm text-label-sm mb-6 leading-relaxed">
+                        Join 24,000+ creators receiving our weekly digest on cinema, tech, and minimalism.
                     </p>
-                </x-slot:helper>
-            </x-widgets.news-letter>
-
-            <div class="md:col-span-4 grid grid-rows-2 gap-gutter">
-                <div
-                    class="glass-card rounded-2xl p-8 border-secondary/20 bg-secondary/5 flex flex-col justify-between">
-                    <span class="material-symbols-outlined text-secondary text-4xl">rocket_launch</span>
-                    <div>
-                        <h4 class="font-headline-lg text-[20px] text-on-surface">Pro Membership</h4>
-                        <p class="text-on-surface-variant font-label-sm text-label-sm mt-1">Unlock exclusive
-                            insights.
-                        </p>
-                    </div>
+                    <form class="space-y-4">
+                        <input
+                            class="w-full bg-surface-container-low/50 border border-white/10 rounded-xl px-4 py-3 text-on-surface font-label-sm text-label-sm focus:border-secondary/50 focus:ring-0 outline-none transition-all"
+                            placeholder="your@email.com" type="email" />
+                        <button
+                            class="w-full bg-on-surface text-surface py-3 rounded-xl font-bold hover:bg-secondary hover:text-on-secondary transition-all active:scale-[0.98]">
+                            Subscribe Now
+                        </button>
+                    </form>
                 </div>
-                <div class="glass-card rounded-2xl p-8 border-white/5 flex flex-col justify-between">
-                    <span class="material-symbols-outlined text-primary text-4xl">communities</span>
-                    <div>
-                        <h4 class="font-headline-lg text-[20px] text-on-surface">Join the Discord</h4>
-                        <p class="text-on-surface-variant font-label-sm text-label-sm mt-1">Chat with the community.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            </aside>
         </div>
-    </section>
+    </div>
+
 </x-layouts.main>

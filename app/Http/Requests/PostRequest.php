@@ -26,12 +26,14 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'cover' => [
                 'nullable',
                 'image',
                 'mimetypes:image/png,image/jpeg',
                 'dimensions:min_width=200,min_height=200,max_width=2000,max_height=2000'
-            ]
+            ],
+            'tags' => 'nullable|string',
         ];
     }
 
