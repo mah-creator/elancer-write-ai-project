@@ -71,6 +71,11 @@
         <!-- Sidebar Actions -->
         <aside class="hidden lg:block col-span-1">
             <div class="sticky top-32 glass-card rounded-full py-8 flex flex-col items-center gap-8 w-16 mx-auto">
+                <span class="group flex flex-col items-center gap-1">
+                    <span class="material-symbols-outlined text-on-surface-variant"
+                        style="font-variation-settings: 'FILL' 1;">visibility</span>
+                    <span class="text-[10px] font-bold text-on-surface-variant">{{ $post->views }}</span>
+                </span>
                 <button class="group flex flex-col items-center gap-1">
                     <span
                         class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors"

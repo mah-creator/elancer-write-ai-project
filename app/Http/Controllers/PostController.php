@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostViewed;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,8 @@ class PostController extends Controller
             ->slug($slug)
             ->firstOrFail();
 
-        event('post.viewed', $post);
+        event(new PostViewed($post));
+
         return view('blog.single-post', ['post' => $post]);
 
     }

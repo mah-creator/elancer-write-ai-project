@@ -43,6 +43,55 @@
         </style>
     </x-slot:style>
 
+    <x-slot:script>
+        <script>
+            document.getElementById('load-more-btn').addEventListener('click', function () {
+                let button = this;
+                let container = document.getElementById('posts-container');
+                let loadingText = document.getElementById('loading-text');
+
+                // Calculate and track the next page number
+                let currentPage = parseInt(button.getAttribute('data-page'));
+                let nextPage = currentPage + 1;
+
+                // Update UI state to loading
+                button.style.display = 'none';
+                loadingText.style.display = 'block';
+
+                // Query the server with Laravel's standard page variable
+                fetch(`{{ route('home') }}?page=${nextPage}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        // Append the new HTML data fragment to the existing content
+                        container.insertAdjacentHTML('beforeend', data.html);
+
+                        // Update the page tracking counter
+                        button.setAttribute('data-page', nextPage);
+                        loadingText.style.display = 'none';
+
+                        if (data.hasMore) {
+                            button.style.display = 'inline-block'; // Show button if more data exists
+                        } else {
+                            loadingText.innerText = "No more posts to load.";
+                            loadingText.style.display = 'block'; // Display final message
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching more records:', error);
+                        button.style.display = 'inline-block';
+                        loadingText.style.display = 'none';
+                    });
+            });
+        </script>
+
+    </x-slot:script>
+
     <!-- Hero Section (Preserved) -->
     <section
         class="cinematic-gradient relative min-h-[500px] flex items-center px-margin-desktop overflow-hidden border-b border-white/5">
@@ -80,7 +129,7 @@
                     <div class="flex flex-wrap gap-2 px-2">
                         @foreach (App\Models\Tag::all() as $tag)
                             <a class="px-2.5 py-1 rounded-md font-label-sm text-[11px] bg-surface-variant/30 border border-white/5 text-on-surface-variant transition-all
-                                                         {{ request('slug') == $tag->slug ? 'border-secondary/30 text-secondary' : 'hover:border-secondary/30 hover:text-secondary' }}"
+                                                                                                 {{ request('slug') == $tag->slug ? 'border-secondary/30 text-secondary' : 'hover:border-secondary/30 hover:text-secondary' }}"
                                 href="{{ route('home', ['slug' => $tag->slug]) }}">#{{ $tag->name }}</a>
 
                         @endforeach
@@ -98,18 +147,20 @@
                             class="px-3 py-1 hover:bg-surface-variant/20 rounded-full text-on-surface-variant font-label-sm text-[12px] transition-colors">Trending</button>
                     </div>
                 </div>
-                <div class="space-y-8">
-                    <!-- Feed Card 1 -->
-                    @foreach ($posts as $post)
-                        <x-contents.post-card :post="$post" />
-
-                    @endforeach
+                <!-- Target container where new data is appended -->
+                <div id="posts-container" class="space-y-8">
+                    @include('posts.partials.list')
                 </div>
+                <!-- Load More controls -->
+
+
+
                 <div class="pt-8 flex justify-center">
-                    <button
+                    <button id="load-more-btn" data-page="1"
                         class="px-10 py-3 border border-secondary/30 text-secondary rounded-full font-label-sm text-label-sm hover:bg-secondary/10 transition-all font-bold">
                         Load More Stories
                     </button>
+                    <p id="loading-text" style="display: none;">Loading...</p>
                 </div>
             </section>
             <!-- Right Sidebar: Trending & Recommendations -->

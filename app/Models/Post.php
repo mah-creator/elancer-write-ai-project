@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\PostStatus;
 use App\Models\Scopes\OwnerScope;
 use App\Models\Scopes\PublishedScope;
+use App\Observers\PostObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 
-#[ScopedBy(OwnerScope::class)]
+#[ScopedBy([OwnerScope::class, PublishedScope::class])]
+#[ObservedBy(PostObserver::class)]
 class Post extends Model
 {
     use SoftDeletes;
@@ -23,11 +26,9 @@ class Post extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'user_id',
         'category_id',
         'title',
         'content',
-        'slug',
         'excerpt',
         'cover_image',
         'status',
@@ -36,8 +37,6 @@ class Post extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope('owner', new OwnerScope);
-        static::addGlobalScope('published', new PublishedScope());
     }
 
     public function scopePublished(Builder $builder)

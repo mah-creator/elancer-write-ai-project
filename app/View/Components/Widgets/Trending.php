@@ -22,7 +22,7 @@ class Trending extends Component
      */
     public function render(): View|Closure|string
     {
-        $posts = Post::with('category')->orderBy('views')->limit(3)->get();
+        $posts = Post::with('category')->orderBy('views', 'desc')->limit(3)->get();
         return view('components.widgets.trending', ['posts' => $posts]);
     }
 }

@@ -14,7 +14,7 @@ class HomeController extends Controller
     {
         $tab = $request->query('tab', null);
 
-        $posts = Post::with('user')->published();
+        $posts = Post::with('user');
 
         if ($slug) {
             $posts = $posts->whereHas('tags', fn($query) => $query->where('slug', '=', $slug));
@@ -26,6 +26,18 @@ class HomeController extends Controller
                 'recent' => $posts = $posts->latest()
             };
         }
-        return view('home', ['posts' => $posts->get(), 'featuredPost' => Post::first()]);
+
+        // Simple pagination is more suitable to implement "load more" pagination
+        $posts = $posts->simplePaginate((3));
+
+        // If AJAX request, return only the data partial view
+        if ($request->wantsJson()) {
+            return response()->json([
+                'html' => view('posts.partials.list', compact('posts'))->render(),
+                'hasMore' => $posts->hasMorePages(),
+            ]);
+        }
+
+        return view('home', ['posts' => $posts, 'featuredPost' => Post::first()]);
     }
 }

@@ -76,10 +76,8 @@ class PostController extends Controller
         $cover_image_path = $fileUpload->upload(key: 'cover', path: 'covers', disk: 'public');
 
         $clean = array_merge($clean, [
-            'user_id' => Auth::id(),
             'status' => 'published',
             'excerpt' => fake()->sentence(4),
-            'slug' => fake()->slug(),
             'cover_image' => $cover_image_path
         ]);
 
@@ -116,7 +114,6 @@ class PostController extends Controller
             ->withCount('comments as comments_count')
             ->slug($slug)
             ->first();
-
 
         return view('dashboard.posts.show', [
             'post' => $post
@@ -187,9 +184,6 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
-        if ($post->cover_image) {
-            Storage::disk('public')->delete($post->cover_image);
-        }
         return redirect()->route('dashboard.posts.index');
     }
 
@@ -224,9 +218,6 @@ class PostController extends Controller
         $post = Post::withTrashed()->findOrFail($id);
         $post->forceDelete();
 
-        if ($post->cover_image) {
-            Storage::disk('public')->delete($post->cover_image);
-        }
         return redirect()->route('dashboard.posts.index');
     }
 }
